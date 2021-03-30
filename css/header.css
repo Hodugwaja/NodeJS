@@ -1,0 +1,53 @@
+* {
+    margin:0;
+    padding:0;
+}
+body {
+    color:#820024;
+}
+ul {
+    list-style-type:none;
+}
+.clear {
+    clear:both;
+}
+#logo {
+    padding:30px 0 0 30px;
+    float:left;
+}
+#top_menu {
+    margin:40px 10px 0 0; 
+    float:right;
+}
+#top_menu li {
+    display:inline;
+}
+#mainMenu {
+    margin-top:15px;
+    padding:30px;
+    text-align:center;
+    
+}
+#mainMenu div a {
+    display:inline;
+    opacity : 1;
+}
+
+#mainMenu:hover{
+    background-color : #820024;
+}
+
+.background {
+    /* The image used */
+    background-image: url("../img/CatchPrise.png");
+  
+    /* Full height */
+  
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    
+    background-attachment: fixed;
+    background-size: cover;
+  }

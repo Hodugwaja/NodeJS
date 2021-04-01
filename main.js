@@ -15,10 +15,20 @@ function templateHTML(title, list, body){
             <body>
                 <h1><a href="/">WEB</a></h1>
                 ${list}
+                <a href = "/create">create</a>
                 ${body}
             </body>
         </html>
     `;
+}
+
+function templateList(files){   
+    var list = '<ul>';
+        for(var i = 0; i<files.length; i++){
+            list = list + `<li><a href="/?id=${files[i]}">${files[i]}</a></li>`
+        }
+    list = list + '</ul>'
+    return list;
 }
 
 var app = http.createServer(function(request,response){
@@ -37,11 +47,7 @@ var app = http.createServer(function(request,response){
                 var title = queryData.id;
             }
             fs.readdir(folder, (err, files) => {   
-                var list = '<ul>';
-                    for(var i = 0; i<files.length; i++){
-                        list = list + `<li><a href="/?id=${files[i]}">${files[i]}</a></li>`
-                    }
-                list = list + '</ul>'
+                var list = templateList(files)
                 var template = templateHTML(title, list, `<h2>${title}</h2>${description}`)
                 response.writeHead(200);
                 response.end(template);
@@ -49,9 +55,30 @@ var app = http.createServer(function(request,response){
             })
         });
         
+    } else if(pathname === '/create'){
+        var title = "welcome"
+        var description = "Hello Node.js"
+        
+        fs.readdir(folder, (err, files) => {   
+            var list = templateList(files)
+            var template = templateHTML(title, list, `
+                <form action="http://localhost:3000/process_create" method="post">
+                    <p><input type="text" name="title" placeholder="title"></p>
+                    <p>
+                        <textarea name="description" placeholder="description"></textarea>
+                    </p>
+                    <p>
+                        <input type="submit">
+                    </p>
+                </form>
+            `)
+            response.writeHead(200);
+            response.end(template);
+            
+        })
     } else{
         response.writeHead(404);
         response.end('404 Not Found')
     }
 });
-app.listen(3000);
+app.listen(3001);

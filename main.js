@@ -82,17 +82,18 @@ var app = http.createServer(function(request,response){
 
         request.on('data', function (data) {
             body += data;
-             if (body.length > 1e6) request.connection.destroy();
         });
 
         request.on('end', function () {
             var post = qs.parse(body);
             var title = post.title;
             var description = post.description;
+            fs.writeFile(`data/${title}`, description, 'utf8', function(err){
+                response.writeHead(302,{Location : `/?id = ${title}`});
+                response.end();
+            })
             console.log(post);
         });   
-        response.writeHead(200);
-        response.end('success');
     }else{
         response.writeHead(404);
         response.end('404 Not Found')

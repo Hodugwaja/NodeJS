@@ -5,7 +5,7 @@ const qs = require('querystring');
 const folder = './data/';
 
 const hostNum = 3001;
-function templateHTML(title, list, body){
+function templateHTML(title, list, body, control){
     return `
         <!doctype html>
         <html>
@@ -16,7 +16,7 @@ function templateHTML(title, list, body){
             <body>
                 <h1><a href="/">WEB</a></h1>
                 ${list}
-                <a href = "/create">create</a>
+                ${control}
                 ${body}
             </body>
         </html>
@@ -49,7 +49,10 @@ var app = http.createServer(function(request,response){
             }
             fs.readdir(folder, (err, files) => {   
                 var list = templateList(files)
-                var template = templateHTML(title, list, `<h2>${title}</h2>${description}`)
+                var template = templateHTML(title, list, 
+                    `<h2>${title}</h2>${description}`, 
+                    `<a href = "/create">create</a> <a href = "/update">update</a>     
+                `)
                 response.writeHead(200);
                 response.end(template);
                 
@@ -89,7 +92,7 @@ var app = http.createServer(function(request,response){
             var title = post.title;
             var description = post.description;
             fs.writeFile(`data/${title}`, description, 'utf8', function(err){
-                response.writeHead(302,{Location : `/?id = ${title}`});
+                response.writeHead(302,{Location : `/?id=${title}`});
                 response.end();
             })
             console.log(post);

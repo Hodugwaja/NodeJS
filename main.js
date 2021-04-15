@@ -2,6 +2,8 @@ var http = require('http');
 var fs = require('fs');
 var url = require('url');
 var qs = require('querystring');
+var path = require('path')
+var sanitizeHtml = require('sanitize-html');
 
 var template = require('./lib/template');
  
@@ -26,24 +28,29 @@ var app = http.createServer(function(request,response){
           response.end(html);
         });
       } else {
-        fs.readdir('./data', function(error, filelist){
-          fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description){
-            var title = queryData.id;
-            var list = template.list(filelist);
-            var html = template.HTML(title, list,
-              `<h2>${title}</h2>${description}`,
-              ` <a href="/create">create</a>
-                <a href="/update?id=${title}">update</a>
-                <form action="delete_process" method="post">
-                  <input type="hidden" name="id" value="${title}">
-                  <input type="submit" value="delete">
-                </form>`
-            );
-            response.writeHead(200);
-            response.end(html);
-          });
-        });
-      }
+            fs.readdir('./data', function(error, filelist){
+                var filterId = path.parse(queryData.id).base;
+                fs.readFile(`data/${filterId}`, 'utf8', function(err, description){
+                    var title = queryData.id;
+                    var sanitziedTitle = sanitizeHtml(title);
+                    var sanitizeDescription = sanitizeHtml(description, {
+                        allowedTags : ['h1']
+                    });
+                    var list = template.list(filelist);
+                    var html = template.HTML(sanitziedTitle, list,
+                    `<h2>${sanitziedTitle}</h2>${sanitizeDescription}`,
+                    ` <a href="/create">create</a>
+                        <a href="/update?id=${sanitziedTitle}">update</a>
+                        <form action="delete_process" method="post">
+                        <input type="hidden" name="id" value="${sanitziedTitle}">
+                        <input type="submit" value="delete">
+                        </form>`
+                    );
+                    response.writeHead(200);
+                    response.end(html);
+                });
+            });
+        }
     } else if(pathname === '/create'){
       fs.readdir('./data', function(error, filelist){
         var title = 'WEB - create';
@@ -78,7 +85,8 @@ var app = http.createServer(function(request,response){
       });
     } else if(pathname === '/update'){
       fs.readdir('./data', function(error, filelist){
-        fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description){
+        var filterId = path.parse(queryData.id).base;
+        fs.readFile(`data/${filterId}`, 'utf8', function(err, description){
           var title = queryData.id;
           var list = template.list(filelist);
           var html = template.HTML(title, list,

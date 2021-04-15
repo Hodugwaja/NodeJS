@@ -1,0 +1,26 @@
+{
+  "name": "nodejs",
+  "version": "1.0.0",
+  "description": "Node.js공부 위한거임",
+  "main": "main.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cropMr/NodeJS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cropMr/NodeJS/issues"
+  },
+  "homepage": "https://github.com/cropMr/NodeJS#readme",
+  "dependencies": {
+    "sanitize-html": "^2.3.3"
+  }
+}
